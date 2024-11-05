@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using Models;
+using Models.DTO;
 using DbContext;
 using Microsoft.EntityFrameworkCore;
 using Services;
@@ -29,7 +30,7 @@ namespace AppStudies.Pages
         //Will execute on a Get request
         public async Task<IActionResult> OnGet()
         {
-            string uri = $"csalbums/read?flat=false";
+            string uri = $"https://seido-webservice-307d89e1f16a.azurewebsites.net/api/csAlbum/Read?seeded=true&flat=true&pageNr=0&pageSize=10";
 
             //Send the HTTP Message and await the repsonse
             HttpResponseMessage response = await _httpClient.GetAsync(uri);
@@ -39,7 +40,9 @@ namespace AppStudies.Pages
 
             //Get the resonse data
             string s = await response.Content.ReadAsStringAsync();
-            Albums = JsonConvert.DeserializeObject<List<csAlbum>>(s);
+            var resp = JsonConvert.DeserializeObject<csRespPageDto<csAlbum>>(s);
+            Albums = resp.PageItems;
+
             return Page();
         }
 

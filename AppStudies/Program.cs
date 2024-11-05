@@ -35,7 +35,7 @@ builder.Services.AddSingleton<IQuoteService, csQuoteService>();
 //Injected to demonstrate communication with external WebApi service
 builder.Services.AddHttpClient(name: "MusicWebApi", configureClient: options =>
 {
-    options.BaseAddress = Configuration.csAppConfig.WebApiBaseUri;
+    //options.BaseAddress = new Uri(Configuration.csAppConfig.ConfigurationRoot["WebApiBaseUri"]);
     options.DefaultRequestHeaders.Accept.Add(
         new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(
             mediaType: "application/json",

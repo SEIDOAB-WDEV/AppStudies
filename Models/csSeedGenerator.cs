@@ -3,7 +3,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Models
+//Inserted as class now, until nuget package works with docker conainerization
+namespace Seido {
+namespace Utilities {
+namespace SeedGenerator
 {
     #region exported types
     public interface ISeed<T>
@@ -586,7 +589,7 @@ namespace Models
                         "Arosmith, Who, AC/DC, Rolling, Stones, Eagles, Deep, Purple, Prince, Dylan",
                     jsonAlbumNames = "Heaven, Rock, Moon, Cosmos, Walk, Hunky, Blue, Highway, " +
                         "Satisfaction, California, Stairway, Purple, Senor",
-                    jsonAlbumPrefix = "A, The, One, The great, A wonderful, Let's rock with, Relaxing, Chill with,  ",
+                    jsonAlbumPrefix = "A, The, One, The great, A wonderful, Let's rock with, Relaxing, Chill with, Dance with",
                     jsonAlbumSuffix = "with friends, with love, with fire, and walking, being happy",
                 }
             };
@@ -594,9 +597,9 @@ namespace Models
         #endregion
 
         #region create master json file
-        public void WriteMasterStream()
+        public string WriteMasterStream()
         {
-            CreateMasterSeedFile().WriteFile("master-seeds.json");
+            return CreateMasterSeedFile().WriteFile("master-seeds.json");
         }
         #endregion
 
@@ -605,13 +608,13 @@ namespace Models
         {
             _seeds = CreateMasterSeedFile();
         }
-        public csSeedGenerator(string SeedFileName)
+        public csSeedGenerator(string SeedPathName)
         {
-            if (!csSeedJsonContent.FileExists(SeedFileName))
+            if (!csSeedJsonContent.FileExists(SeedPathName))
             {
-                throw new FileNotFoundException(SeedFileName);
+                throw new FileNotFoundException(SeedPathName);
             }
-            _seeds = csSeedJsonContent.ReadFile(SeedFileName);
+            _seeds = csSeedJsonContent.ReadFile(SeedPathName);
         }
         #endregion
 
@@ -679,6 +682,7 @@ namespace Models
             }
             #endregion
 
+            [JsonIgnore]
             public string Country => _jsonCountry;
 
             #region Streets towards json file
@@ -858,18 +862,21 @@ namespace Models
             public csSeedMusic _music { get; set; } = new csSeedMusic();
 
 
-            public void WriteFile(string FileName) => WriteFile(this, FileName);
-            public static void WriteFile(csSeedJsonContent Seeds, string FileName)
+            public string WriteFile(string FileName) => WriteFile(this, FileName);
+            public static string WriteFile(csSeedJsonContent Seeds, string FileName)
             {
-                using (Stream s = File.Create(fname(FileName)))
+                var fn = fname(FileName);
+                using (Stream s = File.Create(fn))
                 using (TextWriter writer = new StreamWriter(s))
                     writer.Write(JsonSerializer.Serialize<csSeedJsonContent>(Seeds, new JsonSerializerOptions() { WriteIndented = true }));
+
+                return fn;
             }
 
-            public static csSeedJsonContent ReadFile(string FileName)
+            public static csSeedJsonContent ReadFile(string PathName)
             {
                 csSeedJsonContent _seeds = null;
-                using (Stream s = File.OpenRead(fname(FileName)))
+                using (Stream s = File.OpenRead(PathName))
                 using (TextReader reader = new StreamReader(s))
 
                     _seeds = JsonSerializer.Deserialize<csSeedJsonContent>(reader.ReadToEnd());
@@ -885,9 +892,19 @@ namespace Models
                 return Path.Combine(documentPath, name);
             }
 
-            public static bool FileExists(string FileName) => File.Exists(fname(FileName));
+            public static bool FileExists(string FileName){
+
+                var fn = Path.GetFileName(FileName);
+                if (fn == FileName)
+                {
+                    //no path in FileName use default directory
+                   return File.Exists(fname(FileName));
+                }
+    
+                return File.Exists(FileName);
+            }
         }
-        #endregion
+    #endregion
     }
-}
+}}}
 

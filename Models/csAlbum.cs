@@ -6,57 +6,48 @@ using Newtonsoft.Json;
 using System.Linq;
 
 using Configuration;
+using Seido.Utilities.SeedGenerator;
 
 namespace Models
 {
     public class csAlbum : ISeed<csAlbum>
     {
-        [Key]
         public Guid AlbumId { get; set; }
-        public bool Seeded { get; set; } = true;
 
         public string Name { get; set; }
         public int ReleaseYear { get; set; }
         public long CopiesSold { get; set; }
 
-        //Navigation properties that EFC will use to build relations
+        //Navigation properties
         public csMusicGroup MusicGroup { get; set; } = null;
 
         #region Constructors
-        public csAlbum()
+        public csAlbum(){}
+        public csAlbum(csAlbum org)
         {
-        }
-        public csAlbum(csAlbumCUdto _dto)
-        {
-            AlbumId = Guid.NewGuid();
-            UpdateFromDTO(_dto);
+            this.Seeded = org.Seeded;
+
+            this.AlbumId = org.AlbumId;
+            this.Name = org.Name;
+            this.ReleaseYear = org.ReleaseYear;
+            this.CopiesSold = org.CopiesSold;
         }
         #endregion
 
-        #region Update from DTO
-        public csAlbum UpdateFromDTO(csAlbumCUdto _dto)
+        #region randomly seed this instance
+        public virtual bool Seeded { get; set; } = false;
+        public virtual csAlbum Seed(csSeedGenerator sgen)
         {
-            Name = _dto.Name;
-            ReleaseYear = _dto.ReleaseYear;
-            CopiesSold = _dto.CopiesSold;
-            Seeded = false;
+            Seeded = true;
+            AlbumId = Guid.NewGuid();
+
+            Name = sgen.MusicAlbumName;
+            CopiesSold = sgen.Next(1_000, 1_000_000);
+            ReleaseYear = sgen.Next(1970, 2023);
 
             return this;
         }
         #endregion
-
-        public csAlbum Seed(csSeedGenerator sgen)
-        {
-            var al = new csAlbum
-            {
-                AlbumId = Guid.NewGuid(),
-                Name = sgen.MusicAlbumName,
-                CopiesSold = sgen.Next(1000, 1000000),
-                ReleaseYear = sgen.Next(1970, 2023),
-                Seeded = true
-            };
-            return al;
-        }
     }
 }
 

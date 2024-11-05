@@ -1,64 +1,50 @@
-﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
-using System.Linq;
+﻿using System;
+using System.Diagnostics.Metrics;
 
-using Configuration;
-
+using Seido.Utilities.SeedGenerator;
 namespace Models
 {
     public class csArtist : ISeed<csArtist>
     {
-        [Key]       // for EFC Code first
-        public Guid ArtistId { get; set; }
-        public bool Seeded { get; set; } = true;
+        public virtual Guid ArtistId { get; set; }
 
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public virtual string FirstName { get; set; }
+        public virtual string LastName { get; set; }
 
-        public DateTime? BirthDay { get; set; }
-        public override string ToString() =>
-            $"{FirstName} {LastName}";
+        public virtual DateTime? BirthDay { get; set; }
 
+        //Navigation properties
+        public virtual List<csMusicGroup> MusicGroups { get; set; } = new List<csMusicGroup>();
 
-        //Navigation properties that EFC will use to build relations
-        public List<csMusicGroup> MusicGroups { get; set; } = null;
+        public override string ToString() => $"{FirstName} {LastName}";
 
         #region Constructors
-        public csArtist()
+        public csArtist(){}
+        public csArtist(csArtist org)
         {
-        }
-        public csArtist(csArtistCUdto _dto)
-        {
-            ArtistId = Guid.NewGuid();
-            UpdateFromDTO(_dto);
+            this.Seeded = org.Seeded;
+
+            this.ArtistId = org.ArtistId;
+            this.FirstName = org.FirstName;
+            this.LastName = org.LastName;
+            this.BirthDay = org.BirthDay;
         }
         #endregion
 
-        #region Update from DTO
-        public csArtist UpdateFromDTO(csArtistCUdto _dto)
+        #region randomly seed this instance
+        public virtual bool Seeded { get; set; } = false;
+        public virtual csArtist Seed(csSeedGenerator sgen)
         {
-            this.Seeded = false;
-            this.FirstName = _dto.FirstName;
-            this.LastName = _dto.LastName;
-            this.BirthDay = _dto.BirthDay;
+            Seeded = true;  
+            ArtistId = Guid.NewGuid();
+
+            FirstName = sgen.FirstName;
+            LastName = sgen.LastName;
+            BirthDay = (sgen.Bool) ? sgen.DateAndTime(1940, 1990) : null;
 
             return this;
         }
         #endregion
-        public csArtist Seed(csSeedGenerator sgen)
-        {
-            return new csArtist
-            {
-                ArtistId = Guid.NewGuid(),
-                FirstName = sgen.FirstName,
-                LastName = sgen.LastName,
-                BirthDay = (sgen.Bool) ? sgen.DateAndTime(1940, 1990) : null,
-                Seeded = true
-            };
-        }
     }
 }
 

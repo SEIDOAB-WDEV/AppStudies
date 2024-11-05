@@ -1,75 +1,51 @@
-﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
-using System.Linq;
+﻿using System;
+using System.Diagnostics.Metrics;
 
-using Configuration;
+using Seido.Utilities.SeedGenerator;
 
 namespace Models
 {
     public enum enMusicGenre {Rock, Blues, Jazz, Metall }
-
     public class csMusicGroup : ISeed<csMusicGroup>
     {
-        [Key]       
-        public Guid MusicGroupId { get; set; }
-        public bool Seeded { get; set; } = true;
+        public virtual Guid MusicGroupId { get; set; }
+        public virtual string Name { get; set; }
+        public virtual int EstablishedYear { get; set; }
+        public virtual enMusicGenre Genre { get; set; }
 
-        public string Name { get; set; }
-        public int EstablishedYear { get; set; }
+        //Navigation properties
+        public virtual List<csAlbum> Albums { get; set; } = new List<csAlbum>();
+        public virtual List<csArtist> Artists { get; set; } = new List<csArtist>();
 
-        [Required]
-        public enMusicGenre Genre { get; set; }
-
-        [Required]
-        public string strGenre
-        {
-            get => Genre.ToString();
-            set { }
-        }
         public override string ToString() =>
              $"{Name} with {Artists.Count} members was esblished {EstablishedYear} and made {Albums.Count} great albums.";
 
-        //Navigation properties that EFC will use to build relations
-        public List<csAlbum> Albums { get; set; } = new List<csAlbum>();
-        public List<csArtist> Artists { get; set; } = new List<csArtist>();
-
         #region Constructors
-        public csMusicGroup()
+        public csMusicGroup(){}
+        public csMusicGroup(csMusicGroup org)
         {
-        }
-        public csMusicGroup(csMusicGroupCUdto _dto)
-        {
-            MusicGroupId = Guid.NewGuid();
-            UpdateFromDTO(_dto);
+            Seeded = org.Seeded;
+
+            MusicGroupId = org.MusicGroupId;
+            Name = org.Name;
+            EstablishedYear = org.EstablishedYear;
+            Genre = org.Genre;
         }
         #endregion
 
-        #region Update from DTO
-        public csMusicGroup UpdateFromDTO(csMusicGroupCUdto _dto)
+        #region randomly seed this instance
+        public virtual bool Seeded { get; set; } = false;
+        public virtual csMusicGroup Seed(csSeedGenerator sgen)
         {
-            Name = _dto.Name;
-            EstablishedYear = _dto.EstablishedYear;
-            Genre = _dto.Genre;
-            Seeded = false;
+            Seeded = true;
+            MusicGroupId = Guid.NewGuid();
 
+            Name = sgen.MusicGroupName;
+            EstablishedYear = sgen.Next(1970, 2023);
+            Genre = sgen.FromEnum<enMusicGenre>();
             return this;
         }
         #endregion
-        public csMusicGroup Seed(csSeedGenerator sgen)
-        {
-            var mg = new csMusicGroup
-            {
-                MusicGroupId = Guid.NewGuid(),
-                Name = sgen.MusicGroupName,
-                EstablishedYear = sgen.Next(1970, 2023),
-                Genre = sgen.FromEnum<enMusicGenre>(),
-                Seeded = true
-            };
-            return mg;
-        }
     }
 }
 
