@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using Models;
 using Models.DTO;
-using WapiModels;
 using Microsoft.EntityFrameworkCore;
 using Services;
 using AppStudies.Pages;
@@ -38,10 +37,18 @@ namespace AppStudies.Pages
             //Throw an exception if the response is not successful
             response.EnsureSuccessStatusCode();
 
+var settings = new JsonSerializerSettings
+{
+    Converters = {
+        new AbstractConverter<csMusicGroup, IMusicGroup>(),
+        new AbstractConverter<csAlbum, IAlbum>(),
+        new AbstractConverter<csArtist, IArtist>()
+    },
+};
             //Get the resonse data
             string s = await response.Content.ReadAsStringAsync();
-            var resp = JsonConvert.DeserializeObject<csRespPageDto<csAlbumWapi>>(s);
-            Albums = resp.PageItems.ToList<IAlbum>();
+            var resp = JsonConvert.DeserializeObject<csRespPageDto<IAlbum>>(s, settings);
+            Albums = resp.PageItems;
 
             return Page();
         }
@@ -53,4 +60,16 @@ namespace AppStudies.Pages
             _httpClient = httpClientFactory.CreateClient(name: "MusicWebApi");
         }
     }
+    public class AbstractConverter<TReal, TAbstract> 
+    : JsonConverter where TReal : TAbstract
+{
+    public override Boolean CanConvert(Type objectType)
+        => objectType == typeof(TAbstract);
+
+    public override Object ReadJson(JsonReader reader, Type type, Object value, JsonSerializer jser)
+        => jser.Deserialize<TReal>(reader);
+
+    public override void WriteJson(JsonWriter writer, Object value, JsonSerializer jser)
+        => jser.Serialize(writer, value);
+}
 }
