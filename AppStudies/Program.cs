@@ -1,38 +1,14 @@
-﻿//Show all files in Solution explorer.
-//./obj/Debug/net7.0/AppMvc.GlobalUsings.g.cs show all implicit "using"
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-#region L1.4 Enabling Razor Pages
-//Add a folder called Pages.
-//Copy index.html from wwwroot into Pages
-//rename index.html into index.cshtml
-
-//in index.cshtml change
-//  <title>Simple Razor page</title>
-//  <h1 class="display-5 fw-normal">Simple Razor page</h1>
-//  add @page to the very top (try also without it)
-
-//Adds everything needed for secure RazorPages
 builder.Services.AddRazorPages();
-/*
-//during development this could AFT can be swithced off all the time
-builder.Services.AddRazorPages(o =>
-{
-    o.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
-});
-*/
-#endregion
 
-#region Injecting a dependency service
-//Add the QuoteServices used in the studies, simple singleton list, no database, 
+#region Setup the Dependency service
 builder.Services.AddSingleton<IQuoteService, csQuoteService>();
-
-//Injected to demonstrate communication with external WebApi service
+builder.Services.AddScoped<IMusicService, csMusicServiceWapi>();
 builder.Services.AddHttpClient(name: "MusicWebApi", configureClient: options =>
 {
 //    options.BaseAddress = new Uri("https://seido-webservice-307d89e1f16a.azurewebsites.net/api/");
@@ -46,7 +22,6 @@ builder.Services.AddHttpClient(name: "MusicWebApi", configureClient: options =>
 
 var app = builder.Build();
 
-#region L1.1 Testing and securing the website
 //using Hsts and https to secure the site
 if (!app.Environment.IsDevelopment())
 {
@@ -57,27 +32,15 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-#endregion
-
-#region L1.3 Enabling static and default files
-//Create a wwwroot directory.
-//Copy the files from SimpleStatic into wwwroot directory
 
 //Enable static and default files
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-//try https://localhost:5001/index.html
-//to make this default, simply change app.MapGet("/hello",...) 
-
-#endregion
-
-#region L1.2 Controlling the hosting environment, L1.4 Enabling Razor Pages
-
 //Map Razorpages into Pages folder
 app.MapRazorPages();
 
-//Default HTTPGet response
+//Show Mapping works even if it is razor pages, like for WebApi
 app.MapGet("/hello", () =>
 {
     //read the environment variable ASPNETCORE_ENVIRONMENT
@@ -87,15 +50,5 @@ app.MapGet("/hello", () =>
 
     return $"Hello World!\nASPNETCORE_ENVIRONMENT: {_env}\nMyOwn: {_envMyOwn}";
 });
-#endregion
 
 app.Run();
-
-#region L1.1 Start App in Kestrel without VS2022 environment:
-//Here I add to be shown in console as final after application stopped
-//open terminal in AppStudies project and type
-//dotnet run --launch-profile https
-
-//stopp server in Kesterl by ctrl-C
-Console.WriteLine("The Study webserver has stopped");
-#endregion
