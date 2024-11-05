@@ -35,7 +35,8 @@ builder.Services.AddSingleton<IQuoteService, csQuoteService>();
 //Injected to demonstrate communication with external WebApi service
 builder.Services.AddHttpClient(name: "MusicWebApi", configureClient: options =>
 {
-    //options.BaseAddress = new Uri(Configuration.csAppConfig.ConfigurationRoot["WebApiBaseUri"]);
+//    options.BaseAddress = new Uri("https://seido-webservice-307d89e1f16a.azurewebsites.net/api/");
+    options.BaseAddress = new Uri(Configuration.csAppConfig.ConfigurationRoot["WebApiBaseUri"]);
     options.DefaultRequestHeaders.Accept.Add(
         new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(
             mediaType: "application/json",
