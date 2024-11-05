@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using Models;
 using Models.DTO;
+using WapiModels;
 using Microsoft.EntityFrameworkCore;
 using Services;
 using AppStudies.Pages;
@@ -23,13 +24,13 @@ namespace AppStudies.Pages
         ILogger<ReadWebApiModel> _logger = null;
 
         //public member becomes part of the Model in the Razor page
-        public List<csAlbum> Albums { get; set; } = new List<csAlbum>();
+        public List<IAlbum> Albums { get; set; } = new List<IAlbum>();
 
 
         //Will execute on a Get request
         public async Task<IActionResult> OnGet()
         {
-            string uri = $"csAlbum/Read?seeded=true&flat=true&pageNr=0&pageSize=10";
+            string uri = $"csAlbum/Read?seeded=true&flat=false&pageNr=0&pageSize=10";
 
             //Send the HTTP Message and await the repsonse
             HttpResponseMessage response = await _httpClient.GetAsync(uri);
@@ -39,8 +40,8 @@ namespace AppStudies.Pages
 
             //Get the resonse data
             string s = await response.Content.ReadAsStringAsync();
-            var resp = JsonConvert.DeserializeObject<csRespPageDto<csAlbum>>(s);
-            Albums = resp.PageItems;
+            var resp = JsonConvert.DeserializeObject<csRespPageDto<csAlbumWapi>>(s);
+            Albums = resp.PageItems.ToList<IAlbum>();
 
             return Page();
         }

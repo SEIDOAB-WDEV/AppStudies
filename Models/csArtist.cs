@@ -4,7 +4,7 @@ using System.Diagnostics.Metrics;
 using Seido.Utilities.SeedGenerator;
 namespace Models
 {
-    public class csArtist : ISeed<csArtist>
+    public class csArtist : IArtist, ISeed<csArtist>
     {
         public virtual Guid ArtistId { get; set; }
 
@@ -14,7 +14,7 @@ namespace Models
         public virtual DateTime? BirthDay { get; set; }
 
         //Navigation properties
-        public virtual List<csMusicGroup> MusicGroups { get; set; } = new List<csMusicGroup>();
+        public virtual List<IMusicGroup> MusicGroups { get; set; } = new List<IMusicGroup>();
 
         public override string ToString() => $"{FirstName} {LastName}";
 

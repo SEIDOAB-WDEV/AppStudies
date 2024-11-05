@@ -1,25 +1,20 @@
-﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
-using System.Linq;
+﻿using System;
+using System.Diagnostics.Metrics;
 
-using Configuration;
 using Seido.Utilities.SeedGenerator;
 
 namespace Models
 {
-    public class csAlbum : ISeed<csAlbum>
+    public class csAlbum : IAlbum, ISeed<csAlbum>
     {
-        public Guid AlbumId { get; set; }
-
-        public string Name { get; set; }
-        public int ReleaseYear { get; set; }
-        public long CopiesSold { get; set; }
+        public virtual Guid AlbumId { get; set; }
+ 
+        public virtual string Name { get; set; }
+        public virtual int ReleaseYear { get; set; }
+        public virtual long CopiesSold { get; set; }
 
         //Navigation properties
-        public csMusicGroup MusicGroup { get; set; } = null;
+        public virtual IMusicGroup MusicGroup { get; set; } = null;
 
         #region Constructors
         public csAlbum(){}

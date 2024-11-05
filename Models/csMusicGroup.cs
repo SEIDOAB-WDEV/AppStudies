@@ -5,17 +5,18 @@ using Seido.Utilities.SeedGenerator;
 
 namespace Models
 {
-    public enum enMusicGenre {Rock, Blues, Jazz, Metall }
-    public class csMusicGroup : ISeed<csMusicGroup>
+    public class csMusicGroup : IMusicGroup, ISeed<csMusicGroup>
     {
         public virtual Guid MusicGroupId { get; set; }
         public virtual string Name { get; set; }
         public virtual int EstablishedYear { get; set; }
+
         public virtual enMusicGenre Genre { get; set; }
+        public virtual string strGenre { get => Genre.ToString(); set { } }
 
         //Navigation properties
-        public virtual List<csAlbum> Albums { get; set; } = new List<csAlbum>();
-        public virtual List<csArtist> Artists { get; set; } = new List<csArtist>();
+        public virtual List<IAlbum> Albums { get; set; } = new List<IAlbum>();
+        public virtual List<IArtist> Artists { get; set; } = new List<IArtist>();
 
         public override string ToString() =>
              $"{Name} with {Artists.Count} members was esblished {EstablishedYear} and made {Albums.Count} great albums.";
