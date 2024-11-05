@@ -32,41 +32,41 @@ namespace Services
         #region Admin Services
         public Task<gstusrInfoAllDto> InfoAsync => throw new NotImplementedException();
 
-        public Task<gstusrInfoAllDto> SeedAsync(loginUserSessionDto usr, int nrOfItems) 
+        public Task<gstusrInfoAllDto> SeedAsync(int nrOfItems) 
         {
             throw new NotImplementedException();
         }
-        public Task<gstusrInfoAllDto> RemoveSeedAsync(loginUserSessionDto usr, bool seeded)
+        public Task<gstusrInfoAllDto> RemoveSeedAsync(bool seeded)
         {
             throw new NotImplementedException();
         }
         #endregion
 
         #region MusicGroup CRUD
-        public Task<csRespPageDto<IMusicGroup>> ReadMusicGroupsAsync(loginUserSessionDto usr, bool seeded, bool flat, string filter, int pageNumber, int pageSize) 
+        public Task<csRespPageDto<IMusicGroup>> ReadMusicGroupsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) 
         {
             throw new NotImplementedException();
         }
-        public Task<IMusicGroup> ReadMusicGroupAsync(loginUserSessionDto usr, Guid id, bool flat)
+        public Task<IMusicGroup> ReadMusicGroupAsync(Guid id, bool flat)
         {
             throw new NotImplementedException();
         }
-        public Task<IMusicGroup> DeleteMusicGroupAsync(loginUserSessionDto usr, Guid id)
+        public Task<IMusicGroup> DeleteMusicGroupAsync(Guid id)
         {
             throw new NotImplementedException();
         }
-        public Task<IMusicGroup> UpdateMusicGroupAsync(loginUserSessionDto usr, csMusicGroupCUdto item)
+        public Task<IMusicGroup> UpdateMusicGroupAsync(csMusicGroupCUdto item)
         {
             throw new NotImplementedException();
         }
-        public Task<IMusicGroup> CreateMusicGroupAsync(loginUserSessionDto usr, csMusicGroupCUdto item)
+        public Task<IMusicGroup> CreateMusicGroupAsync(csMusicGroupCUdto item)
         {
             throw new NotImplementedException();
         }
         #endregion
 
         #region Album CRUD      
-        public async Task<csRespPageDto<IAlbum>> ReadAlbumsAsync(loginUserSessionDto usr, bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+        public async Task<csRespPageDto<IAlbum>> ReadAlbumsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
         {
             string uri = $"csAlbum/Read?seeded=true&flat=false&pageNr=0&pageSize=10";
 
@@ -81,42 +81,46 @@ namespace Services
             var resp = JsonConvert.DeserializeObject<csRespPageDto<IAlbum>>(s, _jsonSettings);
             return resp;
         }
-        public Task<IAlbum> ReadAlbumAsync(loginUserSessionDto usr, Guid id, bool flat)
+        public Task<IAlbum> ReadAlbumAsync(Guid id, bool flat)
         {
             throw new NotImplementedException();
         }
-        public Task<IAlbum> DeleteAlbumAsync(loginUserSessionDto usr, Guid id)
+        public Task<IAlbum> DeleteAlbumAsync(Guid id)
         {
             throw new NotImplementedException();
         }
-        public Task<IAlbum> UpdateAlbumAsync(loginUserSessionDto usr, csAlbumCUdto item)
+        public Task<IAlbum> UpdateAlbumAsync(csAlbumCUdto item)
         {
             throw new NotImplementedException();
         }
-        public Task<IAlbum> CreateAlbumAsync(loginUserSessionDto usr, csAlbumCUdto item)
+        public Task<IAlbum> CreateAlbumAsync(csAlbumCUdto item)
         {
             throw new NotImplementedException();
         }
         #endregion
 
         #region Artist CRUD 
-        public Task<csRespPageDto<IArtist>> ReadArtistsAsync(loginUserSessionDto usr, bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+        public Task<csRespPageDto<IArtist>> ReadArtistsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
         {
             throw new NotImplementedException();
         }
-        public Task<IArtist> ReadArtistAsync(loginUserSessionDto usr, Guid id, bool flat)
+        public Task<IArtist> ReadArtistAsync(Guid id, bool flat)
         {
             throw new NotImplementedException();
         }
-        public Task<IArtist> DeleteArtistAsync(loginUserSessionDto usr, Guid id)
+        public Task<IArtist> DeleteArtistAsync(Guid id)
         {
             throw new NotImplementedException();
         }
-        public Task<IArtist> UpdateArtistAsync(loginUserSessionDto usr, csArtistCUdto item)
+        public Task<IArtist> UpdateArtistAsync(csArtistCUdto item)
         {
             throw new NotImplementedException();
         }
-        public Task<IArtist> CreateArtistAsync(loginUserSessionDto usr, csArtistCUdto item)
+        public Task<IArtist> CreateArtistAsync(csArtistCUdto item)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<IArtist> UpsertArtistAsync(csArtistCUdto item)
         {
             throw new NotImplementedException();
         }

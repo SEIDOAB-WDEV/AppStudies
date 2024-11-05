@@ -28,7 +28,7 @@ namespace AppStudies.Pages
         //Will execute on a Get request
         public async Task<IActionResult> OnGet()
         {
-            var response = await _service.ReadAlbumsAsync(null, true, true, null, 0, 10);
+            var response = await _service.ReadAlbumsAsync(true, true, null, 0, 10);
             Albums = response.PageItems;
             return Page();
         }
