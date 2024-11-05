@@ -16,8 +16,9 @@ namespace WapiModels
     public class csArtistWapi: csArtist, ISeed<csArtistWapi>
     {
         #region correcting the Navigation properties migration error caused by using interfaces
-        public new List<csMusicGroupWapi> MusicGroups { get; set; }
-
+        public new List<csMusicGroupWapi> MusicGroups { 
+            get => base.MusicGroups.Select(i => (csMusicGroupWapi)i).ToList(); 
+            set => base.MusicGroups = value.Select(i => (IMusicGroup)i).ToList();}
         #endregion
         
         #region Constructors

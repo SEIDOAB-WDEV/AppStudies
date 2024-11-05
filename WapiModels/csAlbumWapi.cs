@@ -17,7 +17,6 @@ namespace WapiModels
     {
         #region correcting the Navigation properties migration error caused by using interfaces
         public new csMusicGroupWapi MusicGroup { get => (csMusicGroupWapi) base.MusicGroup; set => base.MusicGroup = value; }
-
         #endregion
 
         #region Constructors

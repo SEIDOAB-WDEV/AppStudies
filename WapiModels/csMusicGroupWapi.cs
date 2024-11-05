@@ -16,10 +16,13 @@ namespace WapiModels
     public class csMusicGroupWapi : csMusicGroup, ISeed<csMusicGroupWapi>
     {
         #region correcting the Navigation properties migration error caused by using interfaces
+        public new List<csAlbumWapi> Albums { 
+            get => base.Albums.Select(i => (csAlbumWapi)i).ToList(); 
+            set => base.Albums = value.Select(i => (IAlbum)i).ToList();}
 
-        public new List<csAlbumWapi> Albums { get; set; } = null;
-        
-        public new List<csArtistWapi> Artists { get; set; } = null;
+        public new List<csAlbumWapi> Artists { 
+            get => base.Artists.Select(i => (csAlbumWapi)i).ToList(); 
+            set => base.Artists = value.Select(i => (IArtist)i).ToList();}
         #endregion
         
         #region Constructors
