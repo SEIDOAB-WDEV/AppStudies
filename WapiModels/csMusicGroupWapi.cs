@@ -16,15 +16,10 @@ namespace WapiModels
     public class csMusicGroupWapi : csMusicGroup, ISeed<csMusicGroupWapi>
     {
         #region correcting the Navigation properties migration error caused by using interfaces
-        [JsonIgnore] 
-        public override List<IAlbum> Albums { get => AlbumsWapi?.ToList<IAlbum>(); set => new NotImplementedException(); }
 
-        public virtual List<csAlbumWapi> AlbumsWapi { get; set; } = null;
+        public new List<csAlbumWapi> Albums { get; set; } = null;
         
-        [JsonIgnore] 
-        public override List<IArtist> Artists { get => ArtistsWapi?.ToList<IArtist>(); set => new NotImplementedException(); }
-
-        public virtual List<csArtistWapi> ArtistsWapi { get; set; } = null;
+        public new List<csArtistWapi> Artists { get; set; } = null;
         #endregion
         
         #region Constructors

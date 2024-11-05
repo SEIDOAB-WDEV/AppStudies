@@ -16,10 +16,8 @@ namespace WapiModels
     public class csAlbumWapi : csAlbum, ISeed<csAlbumWapi>
     {
         #region correcting the Navigation properties migration error caused by using interfaces
-        [JsonIgnore] 
-        public override IMusicGroup MusicGroup { get => MusicGroupWapi; set => new NotImplementedException(); }
+        public new csMusicGroupWapi MusicGroup { get => (csMusicGroupWapi) base.MusicGroup; set => base.MusicGroup = value; }
 
-        public virtual csMusicGroupWapi MusicGroupWapi { get; set; } = null;
         #endregion
 
         #region Constructors
